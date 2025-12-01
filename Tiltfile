@@ -16,6 +16,35 @@ helm_resource(
     flags=['--set', 'service.type=NodePort']
 )
 
+k8s_yaml(namespace_yaml('redis'), allow_duplicates=False)
+k8s_resource(
+    workload='redis',
+    labels=['infra'],
+)
+helm_resource(
+    name='redis',
+    chart='oci://registry-1.docker.io/cloudpirates/redis',
+    namespace='redis'
+)
+
+k8s_resource(
+    workload='postgresql',
+    labels=['infra'],
+    resource_deps=['postgresql-repo']
+)
+k8s_yaml(namespace_yaml('postgresql'), allow_duplicates=False)
+helm_repo('postgresql-repo', 'https://groundhog2k.github.io/helm-charts')
+helm_resource(
+    name='postgresql',
+    chart='postgresql-repo/postgres',
+    deps=['postgresql-repo'],
+    namespace='postgresql',
+    flags=[
+        "--set", "env[0].name=POSTGRES_PASSWORD",
+        "--set", "env[0].value=Asdasd11",
+    ]
+)
+
 # Test deployment
 k8s_yaml(
     [
