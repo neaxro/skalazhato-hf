@@ -53,3 +53,21 @@ k8s_yaml(
         'src/apps/test/ingress.yaml',
     ]
 )
+
+k8s_resource(
+    workload='skalazhato',
+    labels=['apps'],
+    resource_deps=['postgresql', 'redis', 'traefik-system']
+)
+k8s_yaml(namespace_yaml('skalazhato'), allow_duplicates=False)
+docker_build(
+    ref='recipe',
+    context='src/apps/recipe-service',
+)
+helm_resource(
+    name='skalazhato',
+    chart='src/helm',
+    namespace='skalazhato',
+    image_deps=['recipe'],
+    image_keys=[('recipeService.image.repository', 'recipeService.image.tag')],
+)

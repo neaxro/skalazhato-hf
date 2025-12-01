@@ -1,0 +1,48 @@
+# Default values for helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+common:
+  ingress:
+    host: skalazhato.nemes.local
+
+recipeService:
+  replicaCount: 2
+
+  image:
+    repository: recipe
+    pullPolicy: IfNotPresent
+    tag: ""
+
+  podAnnotations: {}
+  podLabels: {}
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    path: /recipe
+
+  resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}

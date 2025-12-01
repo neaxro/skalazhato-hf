@@ -1,0 +1,32 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: skalazhato-strip
+  namespace: {{ .Release.Namespace }}
+spec:
+  stripPrefix:
+    prefixes:
+      - {{ .Values.recipeService.ingress.path | quote }}
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: skalazhato
+  namespace: {{ .Release.Namespace }}
+  labels:
+    homework: skalazhato
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-skalazhato-strip@kubernetescrd
+spec:
+  rules:
+    - host: {{ .Values.common.ingress.host }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: {{ .Values.recipeService.ingress.path }}
+            backend:
+              service:
+                name: recipe-service
+                port:
+                  number: {{ .Values.recipeService.service.port }}
