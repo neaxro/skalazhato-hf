@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/name: nginx
 spec:
   rules:
-    - host: skalazhato.nemes.local
+    - host: test.skalazhato.nemes.local
       http:
         paths:
           - pathType: Prefix
