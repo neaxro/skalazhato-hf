@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service
+  namespace: {{ .Release.Namespace }}
+data:
+  logLevel: {{ .Values.recipeService.env.logLevel | quote }}

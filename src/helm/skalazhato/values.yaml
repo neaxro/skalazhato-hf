@@ -30,6 +30,10 @@ recipeService:
       cpu: 50m
       memory: 128Mi
 
+  env:
+    # Options: 'critical', 'error', 'warning', 'info', 'debug', 'trace'. Default: 'info'.
+    logLevel: debug
+
 plannerService:
   # replicaCount: 2
 

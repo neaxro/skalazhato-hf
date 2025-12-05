@@ -27,3 +27,9 @@ spec:
             limits:
               cpu: {{ .Values.recipeService.resources.limits.cpu }}
               memory: {{ .Values.recipeService.resources.limits.memory }}
+          env:
+            - name: LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service
+                  key: logLevel
