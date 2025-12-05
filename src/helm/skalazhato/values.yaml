@@ -16,7 +16,7 @@ common:
       port: 5432
 
 recipeService:
-  replicaCount: 1
+  replicaCount: 2
 
   image:
     repository: recipe
