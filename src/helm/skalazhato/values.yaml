@@ -7,6 +7,14 @@ common:
       recipeService: /recipe
       plannerService: /planner
 
+  database:
+    postgres:
+      username: postgres
+      password: Asdasd11
+      database: mealplanner
+      host: postgresql.postgresql.svc.cluster.local
+      port: 5432
+
 recipeService:
   replicaCount: 1
 

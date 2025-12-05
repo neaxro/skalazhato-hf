@@ -28,6 +28,22 @@ spec:
               cpu: {{ .Values.recipeService.resources.limits.cpu }}
               memory: {{ .Values.recipeService.resources.limits.memory }}
           env:
+            - name: POSTGRES_HOST
+              value: {{ .Values.common.database.postgres.host }}
+            - name: POSTGRES_DATABASE
+              value: {{ .Values.common.database.postgres.database }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.common.database.postgres.port | quote}}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-postgres-credentials
+                  key: username
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-postgres-credentials
+                  key: password
             - name: LOGLEVEL
               valueFrom:
                 configMapKeyRef:

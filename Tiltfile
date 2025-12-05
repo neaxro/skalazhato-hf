@@ -38,6 +38,7 @@ k8s_resource(
     resource_deps=['postgresql-repo']
 )
 k8s_yaml(namespace_yaml('postgresql'), allow_duplicates=False)
+k8s_yaml(['src/infra/postgres/configmap-ddl.yaml'])
 helm_repo('postgresql-repo', 'https://groundhog2k.github.io/helm-charts')
 helm_resource(
     name='postgresql',
@@ -47,6 +48,7 @@ helm_resource(
     flags=[
         "--set", "env[0].name=POSTGRES_PASSWORD",
         "--set", "env[0].value=Asdasd11",
+        "--set", "extraScripts=db-recipe-init-scripts"
     ]
 )
 
