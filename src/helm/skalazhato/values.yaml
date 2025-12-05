@@ -1,0 +1,43 @@
+---
+common:
+  environment: dev
+  ingress:
+    host: skalazhato.nemes.local
+    paths:
+      recipeService: /recipe
+      plannerService: /planner
+
+recipeService:
+  replicaCount: 1
+
+  image:
+    repository: recipe
+    tag: ""
+
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 80
+
+  podAnnotations: {}
+  podLabels: {}
+
+  resources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+plannerService:
+  # replicaCount: 2
+
+  # image:
+  #   repository: planner
+  #   tag: ""
+
+  service:
+    enabled: false
+    type: ClusterIP
+    port: 80

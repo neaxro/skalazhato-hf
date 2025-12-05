@@ -1,0 +1,15 @@
+{{- if .Values.recipeService.service.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    {{- include "skalazhato.recipe-service.labelSelector" . | nindent 4 }}
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: {{ .Values.recipeService.service.port }}
+{{- end }}

@@ -71,7 +71,7 @@ docker_build(
 )
 helm_resource(
     name='skalazhato',
-    chart='src/helm',
+    chart='src/helm/skalazhato',
     namespace='skalazhato',
     image_deps=['recipe'],
     image_keys=[('recipeService.image.repository', 'recipeService.image.tag')],

@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.recipeService.replicaCount }}
+  selector:
+    matchLabels: {{- include "skalazhato.recipe-service.labelSelector" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "skalazhato.recipe-service.labelSelector" . | nindent 8 }}
+    spec:
+      containers:
+        - name: recipe-service
+          image: "{{ .Values.recipeService.image.repository }}:{{ .Values.recipeService.image.tag }}"
+          {{- if .Values.recipeService.service.enabled }}
+          ports:
+          - containerPort: {{ .Values.recipeService.service.port }}
+          {{- end }}
+          resources:
+            requests:
+              cpu: {{ .Values.recipeService.resources.requests.cpu }}
+              memory: {{ .Values.recipeService.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.recipeService.resources.limits.cpu }}
+              memory: {{ .Values.recipeService.resources.limits.memory }}

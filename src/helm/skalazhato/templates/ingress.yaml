@@ -1,0 +1,43 @@
+---
+{{- if or .Values.plannerService.service.enabled .Values.recipeService.service.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Chart.Name }}-{{ .Release.Name }}-strip
+  namespace: {{ .Release.Namespace }}
+spec:
+  stripPrefix:
+    prefixes:
+      - {{ .Values.common.ingress.paths.recipeService | quote }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}-{{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ .Chart.Name }}-{{ .Release.Name }}-strip@kubernetescrd
+spec:
+  rules:
+    - host: {{ .Values.common.ingress.host }}
+      http:
+        paths:
+          {{- if .Values.recipeService.service.enabled }}
+          - pathType: Prefix
+            path: {{ .Values.common.ingress.paths.recipeService }}
+            backend:
+              service:
+                name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service
+                port:
+                  number: 80
+          {{- end }}
+          {{- if .Values.plannerService.service.enabled }}
+          - pathType: Prefix
+            path: {{ .Values.common.ingress.paths.plannerService }}
+            backend:
+              service:
+                name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service  # TODO: change!
+                port:
+                  number: 80
+          {{- end }}
+{{- end }}
