@@ -13,7 +13,12 @@ helm_resource(
     chart='traefik/traefik',
     deps=['traefik-repo'],
     namespace='traefik',
-    flags=['--set', 'service.type=NodePort']
+    flags=[
+        '--set',
+        'service.type=NodePort',
+        '--set',
+        'ports.web.nodePort=30000',
+    ]
 )
 
 k8s_yaml(namespace_yaml('redis'), allow_duplicates=False)
