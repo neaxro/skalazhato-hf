@@ -4,10 +4,18 @@ name: skalazhato-hf-local-dev
 nodes:
   - role: control-plane
     image: kindest/node:v1.31.9
-    labels: {}
+    extraMounts:
+      - hostPath: /tmp/kind-backups
+        containerPath: /mnt/backups
+
   - role: worker
     image: kindest/node:v1.31.9
-    labels: {}
+    extraMounts:
+      - hostPath: /tmp/kind-backups
+        containerPath: /mnt/backups
+
   - role: worker
     image: kindest/node:v1.31.9
-    labels: {}
+    extraMounts:
+      - hostPath: /tmp/kind-backups
+        containerPath: /mnt/backups

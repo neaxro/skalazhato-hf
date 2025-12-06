@@ -1,0 +1,15 @@
+{{- if .Values.backuper.pvc.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Chart.Name }}-{{ .Release.Name }}-backup
+spec:
+  storageClassName: ""
+  capacity:
+    storage: {{ .Values.backuper.pvc.size }}
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: {{ .Values.backuper.pvc.hostPath }}
+    type: DirectoryOrCreate
+{{- end }}

@@ -58,3 +58,7 @@ backuper:
   image:
     repository: postgres
     tag: 18
+  pvc:
+    enabled: true
+    hostPath: /mnt/backups
+    size: 15Gi

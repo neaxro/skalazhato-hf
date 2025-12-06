@@ -18,9 +18,12 @@ Jegy 	Pont
 - [] CICD;10
 - [X] GW;5-10
 - [X] CONTRIB;2
+- [X] OPSTR;3
 - [] Sum;86
 
-24+10+3*5+3+7+5+2=66
+24+10+3*5+3+7+5+2+3=69
+
+{OPSTR} Tartós tár, pl. lokális mappa csatolása klaszterbe. 3 pont
 
 {LANG2} Több programozási nyelv használata. A backend szolgáltatások legalább két különböző programozási nyelven készültek. (A frontend ebbe nem számít bele!): 5 pont
 

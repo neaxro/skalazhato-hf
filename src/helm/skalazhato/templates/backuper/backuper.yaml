@@ -12,7 +12,7 @@ spec:
           containers:
           - name: postgresql-backuper
             image: "{{ .Values.backuper.image.repository }}:{{ .Values.backuper.image.tag }}"
-            command: ["/bin/sh", "/scripts/backup.sh"]
+            command: ["/bin/bash", "/scripts/backup.sh"]
             env:
               - name: POSTGRES_HOST
                 value: {{ .Values.common.database.postgres.host }}
@@ -42,5 +42,11 @@ spec:
               configMap:
                 name: {{ .Chart.Name }}-{{ .Release.Name }}-backuper-script
                 defaultMode: 0755
+            {{- if .Values.backuper.pvc.enabled }}
+            - name: backup-storage
+              persistentVolumeClaim:
+                claimName: {{ .Chart.Name }}-{{ .Release.Name }}-backup-pvc
+            {{- else }}
             - name: backup-storage
               emptyDir: {}
+            {{- end }}

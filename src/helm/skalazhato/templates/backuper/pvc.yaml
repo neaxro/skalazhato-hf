@@ -1,0 +1,15 @@
+{{- if .Values.backuper.pvc.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Chart.Name }}-{{ .Release.Name }}-backup-pvc
+  namespace: {{ .Release.Namespace }}
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.backuper.pvc.size }}
+  volumeName: {{ .Chart.Name }}-{{ .Release.Name }}-backup
+{{- end }}

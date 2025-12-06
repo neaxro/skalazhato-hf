@@ -25,4 +25,8 @@ data:
             "$POSTGRES_DATABASE" \
             | gzip > "$BACKUP_FILE"
 
+
+    echo "Sleeping for 10s to simulate bigger DB's dump..."
+    sleep 10
+
     echo "Backup finished successfully: $BACKUP_FILE"
