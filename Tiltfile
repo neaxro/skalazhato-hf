@@ -1,6 +1,12 @@
 load('ext://helm_resource', 'helm_resource', 'helm_repo')
 load('ext://namespace', 'namespace_yaml')
 
+k8s_yaml(['src/infra/metrics-server/components.yaml'])
+k8s_resource(
+    workload='metrics-server',
+    labels=['infra']
+)
+
 k8s_resource(
     workload='traefik-system',
     labels=['infra'],
@@ -53,6 +59,7 @@ helm_resource(
 )
 
 # Test deployment
+
 k8s_yaml(
     [
         'src/apps/test/deployment.yaml',
@@ -64,7 +71,12 @@ k8s_yaml(
 k8s_resource(
     workload='skalazhato',
     labels=['apps'],
-    resource_deps=['postgresql', 'redis', 'traefik-system']
+    resource_deps=[
+        'postgresql',
+        'redis',
+        'traefik-system',
+        'metrics-server'
+    ]
 )
 k8s_yaml(namespace_yaml('skalazhato'), allow_duplicates=False)
 k8s_yaml(namespace_yaml('skalazhato-bemutatas'), allow_duplicates=False)
