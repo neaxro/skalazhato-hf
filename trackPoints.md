@@ -8,7 +8,7 @@
 - [] K8SJOB;5
 - [X] K8SCMAP;5
 - [X] K8SSECRET;3
-- [] K8SNS;7
+- [X] K8SNS;7
 - [] CICD;10
 - [X] GW;5-10
 - [X] CONTRIB;2

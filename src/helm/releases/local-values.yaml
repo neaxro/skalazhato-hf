@@ -1,0 +1,55 @@
+---
+common:
+  environment: dev
+  ingress:
+    host: skalazhato.nemes.local
+    paths:
+      recipeService: /recipe
+      plannerService: /planner
+
+  database:
+    postgres:
+      username: postgres
+      password: Asdasd11
+      database: mealplanner
+      host: postgresql.postgresql.svc.cluster.local
+      port: 5432
+
+recipeService:
+  replicaCount: 2
+
+  image:
+    repository: recipe
+    tag: "local-latest"
+
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 80
+
+  podAnnotations: {}
+  podLabels: {}
+
+  resources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+  env:
+    # Options: 'critical', 'error', 'warning', 'info', 'debug', 'trace'. Default: 'info'.
+    logLevel: debug
+
+plannerService:
+  # replicaCount: 2
+
+  # image:
+  #   repository: planner
+  #   tag: ""
+
+  service:
+    enabled: false
+    type: ClusterIP
+    port: 80

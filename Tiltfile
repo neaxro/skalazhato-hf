@@ -67,6 +67,7 @@ k8s_resource(
     resource_deps=['postgresql', 'redis', 'traefik-system']
 )
 k8s_yaml(namespace_yaml('skalazhato'), allow_duplicates=False)
+k8s_yaml(namespace_yaml('skalazhato-bemutatas'), allow_duplicates=False)
 docker_build(
     ref='recipe',
     context='src/apps/recipe-service',
