@@ -1,6 +1,6 @@
 from datetime import datetime, date
 from decimal import Decimal
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, Field, conint
 
 
@@ -75,3 +75,9 @@ class MealplanRecipeRead(MealplanRecipeBase):
 
     class Config:
         from_attributes = True
+
+class RecipeIngredient(IngredientRead):
+    quantity: Decimal
+
+class RecipeWithIngredients(RecipeRead):
+    ingredients: List[RecipeIngredient]

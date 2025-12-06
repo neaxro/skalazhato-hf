@@ -210,3 +210,130 @@ class PostgresRepository:
         except Exception as e:
             logger.error("DB delete error: %s", e)
             raise
+
+    def get_recipe_ingredients(self, recipe_id: int) -> List[RecipeIngredient]:
+        query = """
+            SELECT i.id, i.name, i.unit, ri.quantity
+            FROM recipe_ingredients ri
+            JOIN ingredients i ON ri.ingredient_id = i.id
+            WHERE ri.recipe_id = %s
+        """
+        params = (recipe_id,)
+
+        try:
+            with self.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(query, params)
+                    rows = cur.fetchall()
+
+            recipe_ingredients = [
+                RecipeIngredient(
+                    id=row["id"],
+                    name=row["name"],
+                    unit=row.get("unit"),
+                    quantity=Decimal(row["quantity"])
+                )
+                for row in rows
+            ]
+
+            return recipe_ingredients
+
+        except Exception as e:
+            logger.error("DB fetch error: %s", e)
+            raise
+
+    def get_recipe_contains_ingredient(self, recipe_id: int, ingredient_id: int):
+        query = """
+            SELECT * FROM recipe_ingredients
+            WHERE recipe_id = %s
+                AND ingredient_id = %s
+        """
+        params = (recipe_id, ingredient_id)
+        
+        try:
+            with self.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(query, params)
+                    result = cur.fetchone()
+        except Exception as e:
+            logger.error("DB query error: %s", e)
+            raise
+        
+        return RecipeIngredientRead(**result) if result else None
+
+    def create_recipe_ingredients(self, recipe_id: int, ingredient_id: int, ingredient_quantity: int) -> int:
+        query = """
+            INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity)
+            VALUES (%s, %s, %s)
+            RETURNING id
+        """
+        params = (recipe_id, ingredient_id, ingredient_quantity)
+
+        try:
+            with self.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(query, params)
+                    pair_id = cur.fetchone()["id"]
+                    conn.commit()
+                    logger.debug(f'Added ingredient to recipe, pair id={pair_id}')
+                    return pair_id
+        except Exception as e:
+            logger.error("DB insert error: %s", e)
+            raise
+
+    def update_recipe_ingredient(
+        self,
+        recipe_id: int,
+        ingredient_id: int,
+        new_quantity: int
+    ) -> int:
+        query = """
+            UPDATE recipe_ingredients
+            SET quantity = %s
+            WHERE recipe_id = %s AND ingredient_id = %s
+            RETURNING id
+        """
+        params = (new_quantity, recipe_id, ingredient_id)
+
+        try:
+            with self.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(query, params)
+                    updated_row = cur.fetchone()
+                    if not updated_row:
+                        raise ValueError(
+                            f"No ingredient with id={ingredient_id} found in recipe id={recipe_id}"
+                        )
+                    conn.commit()
+                    logger.debug(
+                        f"Updated ingredient {ingredient_id} in recipe {recipe_id}, new quantity={new_quantity}"
+                    )
+                    return updated_row["id"]
+        except Exception as e:
+            logger.error("DB update error: %s", e)
+            raise
+
+    def delete_recipe_ingredient(self, recipe_id: int, ingredient_id: int) -> None:
+        query = """
+            DELETE FROM recipe_ingredients
+            WHERE recipe_id = %s AND ingredient_id = %s
+            RETURNING id
+        """
+        params = (recipe_id, ingredient_id)
+
+        try:
+            with self.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(query, params)
+                    deleted_row = cur.fetchone()
+                    if not deleted_row:
+                        raise ValueError(
+                            f"No ingredient with id={ingredient_id} found in recipe id={recipe_id}"
+                        )
+                    conn.commit()
+                    logger.debug(
+                        f"Deleted ingredient {ingredient_id} from recipe {recipe_id}"
+                    )
+        except Exception as e:
+            logger.error("DB delete error: %s", e)
+            raise
