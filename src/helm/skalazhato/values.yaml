@@ -53,3 +53,8 @@ plannerService:
     enabled: false
     type: ClusterIP
     port: 80
+
+backuper:
+  image:
+    repository: postgres
+    tag: 18

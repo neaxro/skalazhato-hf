@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: showall-script
+  namespace: skalazhato
+data:
+  showall.sh: |
+    #!/bin/sh
+    set -e
+
+    echo "Connecting to database '$POSTGRES_DATABASE' at $POSTGRES_HOST:$POSTGRES_PORT"
+
+    export PGPASSWORD="$POSTGRES_PASS"
+
+    TABLES=$(psql -h "$POSTGRES_HOST" -p "$POSTGRES_PORT" -U "$POSTGRES_USER" -d "$POSTGRES_DATABASE" -Atc \
+        "SELECT tablename FROM pg_tables WHERE schemaname='public';")
+
+    echo "Found tables:"
+    echo "$TABLES"
+    echo "---------------------------"
+
+    for TABLE in $TABLES; do
+      echo "Table: $TABLE"
+      psql -h "$POSTGRES_HOST" -p "$POSTGRES_PORT" -U "$POSTGRES_USER" -d "$POSTGRES_DATABASE" -c "SELECT * FROM $TABLE;"
+      echo "---------------------------"
+    done

@@ -1,11 +1,17 @@
 # Track Completed Points
 
+Jegy 	Pont
+5 	    80-100
+4 	    67-79
+3 	    54-66
+
 - [X] BASE;24
 - [] LANG2;5
 - [] NOERR;5
 - [] CACHE;5
 - [X] HELM;10
-- [] K8SJOB;5
+- [X] K8SJOB;5
+- [X] K8SCRONJOB;5      TODO: HOZZAADNI A CSV-HEZ!
 - [X] K8SCMAP;5
 - [X] K8SSECRET;3
 - [X] K8SNS;7
@@ -14,6 +20,7 @@
 - [X] CONTRIB;2
 - [] Sum;86
 
+24+10+3*5+3+7+5+2=66
 
 {LANG2} Több programozási nyelv használata. A backend szolgáltatások legalább két különböző programozási nyelven készültek. (A frontend ebbe nem számít bele!): 5 pont
 
@@ -24,6 +31,8 @@
 {HELM} A szolgáltatás Kubernetesen belül futó része Helm chart-on keresztül telepíthető. Szükséges demonstrálni a rendszer frissítését a chart segítségével: 10 pont
 
 {K8SJOB} Kubernetes Job objektum használata, lefuttatása védéskor: 5 pont
+
+{K8SCRONJOB} Kubernetes CronJob objektum használata, korábbi lefutás demonstrálása védéskor: 5 pont
 
 {K8SCMAP} Kubernetes ConfigMap objektum használata valamely konfigurációs beállítás tárolására: 5 pont
 

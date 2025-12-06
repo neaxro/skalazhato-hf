@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: showall
+  namespace: skalazhato
+spec:
+  template:
+    spec:
+      containers:
+        - name: pi
+          image: "postgres:18"
+          command: ["/bin/sh", "/scripts/showall.sh"]
+          env:
+            - name: POSTGRES_HOST
+              value: postgresql.postgresql.svc.cluster.local
+            - name: POSTGRES_DATABASE
+              value: mealplanner
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASS
+              value: Asdasd11
+          volumeMounts:
+            - name: showall-script
+              mountPath: /scripts
+              readOnly: true
+      restartPolicy: Never
+      volumes:
+        - name: showall-script
+          configMap:
+            name: showall-script
+            defaultMode: 0755
