@@ -58,16 +58,6 @@ helm_resource(
     ]
 )
 
-# Test deployment
-
-k8s_yaml(
-    [
-        'src/apps/test/deployment.yaml',
-        'src/apps/test/service.yaml',
-        'src/apps/test/ingress.yaml',
-    ]
-)
-
 k8s_resource(
     workload='skalazhato',
     labels=['apps'],
