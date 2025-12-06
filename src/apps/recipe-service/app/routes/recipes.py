@@ -1,7 +1,7 @@
 import logging
 from typing import List, Optional
 from fastapi import APIRouter
-from app.service.service import recipeService
+from app.service.recipes import recipeService
 from app.models.models import RecipeBase
 
 logger = logging.getLogger(__name__)
