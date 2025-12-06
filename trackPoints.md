@@ -19,11 +19,17 @@ Jegy 	Pont
 - [X] GW;5-10
 - [X] CONTRIB;2
 - [X] OPSTR;3
+- [X] HSC;5
 - [] Sum;86
 
-24+10+3*5+3+7+5+2+3=69
+24+10+3*5+3+7+5+2+3+5=74
 
 {OPSTR} Tartós tár, pl. lokális mappa csatolása klaszterbe. 3 pont
+
+{HSC} Horizontális skálázás podok szintjén. Védésen a (vissza)skálázást demonstrálni kell. 5-10 pont
+
+    Horizontal Pod AutoScaler alapú: 5 pont
+    KEDA alapú, valamilyen adat, esemény alapján: 10 pont
 
 {LANG2} Több programozási nyelv használata. A backend szolgáltatások legalább két különböző programozási nyelven készültek. (A frontend ebbe nem számít bele!): 5 pont
 

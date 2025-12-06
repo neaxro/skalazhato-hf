@@ -1,0 +1,32 @@
+{{- if .Values.recipeService.horizontalScaler.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Chart.Name }}-{{ .Release.Name }}-hpa
+  namespace: {{ .Release.Namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service
+  minReplicas: {{ .Values.recipeService.horizontalScaler.minReplicas }}
+  maxReplicas: {{ .Values.recipeService.horizontalScaler.maxReplicas }}
+  metrics:
+    {{- range $resource, $threshold := .Values.recipeService.horizontalScaler.resources }}
+    - type: Resource
+      resource:
+        name: {{ $resource }}
+        target:
+          type: Utilization
+          averageUtilization: {{ $threshold }}
+    {{- end }}
+  {{- if .Values.recipeService.horizontalScaler.isDemo }}
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 10
+      policies:
+        - type: Percent
+          value: 50
+          periodSeconds: 5
+  {{- end }}
+{{- end }}

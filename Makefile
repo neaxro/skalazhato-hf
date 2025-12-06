@@ -39,3 +39,7 @@ helm-install-skalazhato: ## Installs a release.
 helm-uninstall-skalazhato: ## Installs a release.
 	helm uninstall $(SKALAZHATO_RELEASE_NAME) \
 		-n $(SKALAZHATO_RELEASE_NS) \
+
+.PHONY: load
+load: ## Creates huge traffic on backend to test HPA.
+	bash src/infra/skalazhato/traffic-load.sh

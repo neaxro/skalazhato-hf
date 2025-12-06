@@ -16,7 +16,7 @@ common:
       port: 5432
 
 recipeService:
-  replicaCount: 2
+  replicaCount: 1
 
   image:
     repository: recipe
@@ -32,11 +32,20 @@ recipeService:
 
   resources:
     limits:
-      cpu: 250m
-      memory: 512Mi
+      cpu: 100m
+      memory: 256Mi
     requests:
       cpu: 50m
       memory: 128Mi
+
+  horizontalScaler:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    isDemo: true
+    resources:
+      cpu: 50
+      memory: 50
 
   env:
     # Options: 'critical', 'error', 'warning', 'info', 'debug', 'trace'. Default: 'info'.
@@ -61,4 +70,4 @@ backuper:
   pvc:
     enabled: true
     hostPath: /mnt/backups
-    size: 15Gi
+    size: 5Gi
