@@ -1,4 +1,4 @@
-{{- if or .Values.plannerService.service.enabled .Values.recipeService.service.enabled }}
+{{- if or .Values.mealplanService.service.enabled .Values.recipeService.service.enabled }}
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
@@ -30,12 +30,12 @@ spec:
                 port:
                   number: 80
           {{- end }}
-          {{- if .Values.plannerService.service.enabled }}
+          {{- if .Values.mealplanService.service.enabled }}
           - pathType: Prefix
-            path: {{ .Values.common.ingress.paths.plannerService }}
+            path: {{ .Values.common.ingress.paths.mealplanService }}
             backend:
               service:
-                name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service  # TODO: change!
+                name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-service
                 port:
                   number: 80
           {{- end }}

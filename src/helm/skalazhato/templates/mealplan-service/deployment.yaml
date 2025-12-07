@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.mealplanService.replicaCount }}
+  selector:
+    matchLabels: {{- include "skalazhato.mealplan-service.labelSelector" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "skalazhato.mealplan-service.labelSelector" . | nindent 8 }}
+    spec:
+      containers:
+        - name: mealplan-service
+          image: "{{ .Values.mealplanService.image.repository }}:{{ .Values.mealplanService.image.tag }}"
+          {{- if .Values.mealplanService.service.enabled }}
+          ports:
+          - containerPort: {{ .Values.mealplanService.service.port }}
+          {{- end }}
+          resources:
+            requests:
+              cpu: {{ .Values.mealplanService.resources.requests.cpu }}
+              memory: {{ .Values.mealplanService.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.mealplanService.resources.limits.cpu }}
+              memory: {{ .Values.mealplanService.resources.limits.memory }}
+          env:
+            - name: POSTGRES_HOST
+              value: {{ .Values.common.database.postgres.host }}
+            - name: POSTGRES_DATABASE
+              value: {{ .Values.common.database.postgres.database }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.common.database.postgres.port | quote}}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-postgres-credentials
+                  key: username
+            - name: POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-postgres-credentials
+                  key: password
+            - name: LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-service
+                  key: logLevel
+            - name: ROOTPATH
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-service
+                  key: rootPath

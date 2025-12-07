@@ -74,10 +74,17 @@ docker_build(
     ref='recipe',
     context='src/apps/recipe-service',
 )
+docker_build(
+    ref='mealplan',
+    context='src/apps/mealplan-service',
+)
 helm_resource(
     name='skalazhato',
     chart='src/helm/skalazhato',
     namespace='skalazhato',
-    image_deps=['recipe'],
-    image_keys=[('recipeService.image.repository', 'recipeService.image.tag')],
+    image_deps=['recipe', 'mealplan'],
+    image_keys=[
+        ('recipeService.image.repository', 'recipeService.image.tag'),
+        ('mealplanService.image.repository', 'mealplanService.image.tag')
+    ],
 )

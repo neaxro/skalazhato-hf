@@ -1,6 +1,6 @@
 export CLUSTER_NAME=skalazhato-hf-local-dev
 
-export SKALAZHATO_RELEASE_NAME=skalazhato
+export SKALAZHATO_RELEASE_NAME=skalazhato-bemutatas
 export SKALAZHATO_RELEASE_NS=skalazhato-bemutatas
 
 .PHONY: help
@@ -22,10 +22,18 @@ cluster-delete: ## Deletes kind cluster.
 cluster-kubeconfig: ## Exports and sets the kubeconfig of the kind cluster.
 	kind export kubeconfig --name $(CLUSTER_NAME)
 
-.PHONY: build-app-recipe
-build-app-recipe: ## Builds recipe app's container image.
+.PHONY: bap-app
+bap-app: bap-app-recipe bap-app-mealplan
+
+.PHONY: bap-app-recipe
+bap-app-recipe: ## Builds and pushes recipe app's container image.
 	docker build --file src/apps/recipe-service/Dockerfile --tag recipe:local-latest src/apps/recipe-service/ && \
 	kind load docker-image recipe:local-latest --name $(CLUSTER_NAME)
+
+.PHONY: bap-app-mealplan
+bap-app-mealplan: ## Builds and pushes mealplan app's container image.
+	docker build --file src/apps/mealplan-service/Dockerfile --tag mealplan:local-latest src/apps/mealplan-service/ && \
+	kind load docker-image mealplan:local-latest --name $(CLUSTER_NAME)
 
 .PHONY: helm-install-skalazhato
 helm-install-skalazhato: ## Installs a release.

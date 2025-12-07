@@ -1,0 +1,14 @@
+{{- if .Values.mealplanService.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    {{- include "skalazhato.mealplan-service.labelSelector" . | nindent 4 }}
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: {{ .Values.mealplanService.service.port }}
+{{- end }}

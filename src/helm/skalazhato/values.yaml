@@ -5,7 +5,7 @@ common:
     host: skalazhato.nemes.local
     paths:
       recipeService: /recipe
-      plannerService: /planner
+      mealplanService: /planner
 
   database:
     postgres:
@@ -51,17 +51,41 @@ recipeService:
     # Options: 'critical', 'error', 'warning', 'info', 'debug', 'trace'. Default: 'info'.
     logLevel: debug
 
-plannerService:
-  # replicaCount: 2
+mealplanService:
+  replicaCount: 1
 
-  # image:
-  #   repository: planner
-  #   tag: ""
+  image:
+    repository: mealplan
+    tag: ""
 
   service:
-    enabled: false
+    enabled: true
     type: ClusterIP
     port: 80
+
+  podAnnotations: {}
+  podLabels: {}
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+  horizontalScaler:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    isDemo: true
+    resources:
+      cpu: 50
+      memory: 50
+
+  env:
+    # Options: 'critical', 'error', 'warning', 'info', 'debug', 'trace'. Default: 'info'.
+    logLevel: debug
 
 backuper:
   image:

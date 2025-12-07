@@ -1,18 +1,18 @@
-{{- if .Values.recipeService.horizontalScaler.enabled }}
+{{- if .Values.mealplanService.horizontalScaler.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-hpa
+  name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-hpa
   namespace: {{ .Release.Namespace }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service
-  minReplicas: {{ .Values.recipeService.horizontalScaler.minReplicas }}
-  maxReplicas: {{ .Values.recipeService.horizontalScaler.maxReplicas }}
+    name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-service
+  minReplicas: {{ .Values.mealplanService.horizontalScaler.minReplicas }}
+  maxReplicas: {{ .Values.mealplanService.horizontalScaler.maxReplicas }}
   metrics:
-    {{- range $resource, $threshold := .Values.recipeService.horizontalScaler.resources }}
+    {{- range $resource, $threshold := .Values.mealplanService.horizontalScaler.resources }}
     - type: Resource
       resource:
         name: {{ $resource }}
@@ -20,7 +20,7 @@ spec:
           type: Utilization
           averageUtilization: {{ $threshold }}
     {{- end }}
-  {{- if .Values.recipeService.horizontalScaler.isDemo }}
+  {{- if .Values.mealplanService.horizontalScaler.isDemo }}
   behavior:
     scaleDown:
       stabilizationWindowSeconds: 10
