@@ -51,7 +51,7 @@ class MealplanBase(BaseModel):
     week_start: date
 
 class MealplanCreate(MealplanBase):
-    pass
+    recipes: List[RecipeRead]
 
 class MealplanRead(MealplanBase):
     id: int
@@ -65,10 +65,8 @@ class MealplanRecipeBase(BaseModel):
     recipe_id: int
     day_of_week: conint(ge=0, le=6)
 
-
 class MealplanRecipeCreate(MealplanRecipeBase):
     pass
-
 
 class MealplanRecipeRead(MealplanRecipeBase):
     id: int
@@ -81,3 +79,9 @@ class RecipeIngredient(IngredientRead):
 
 class RecipeWithIngredients(RecipeRead):
     ingredients: List[RecipeIngredient]
+
+class MealRecipeWithIngredients(MealplanRecipeRead):
+    ingredients: List[RecipeIngredient]
+
+class MealplanReadWithRecipes(MealplanRead):
+    recipes: List[MealRecipeWithIngredients]

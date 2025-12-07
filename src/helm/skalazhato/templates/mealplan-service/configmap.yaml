@@ -6,3 +6,7 @@ metadata:
 data:
   logLevel: {{ .Values.mealplanService.env.logLevel | quote }}
   rootPath: {{ .Values.common.ingress.paths.mealplanService }}
+  redisHost: {{ .Values.common.database.redis.host }}
+  redisPort: {{ .Values.common.database.redis.port | quote }}
+  recipeServiceHost: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service
+  recipeServiceNamespace: {{ .Release.Namespace }}

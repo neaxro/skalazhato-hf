@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from app.routes import mealplan, shoppinglist
 from pydantic import BaseModel
 from app.utils.config import config
+from app.service.redis import init_redis
 
 class ErrorResponse(BaseModel):
     msg: str = "Error occured."
@@ -18,6 +19,10 @@ app = FastAPI(
     title="MealPlanner API",
     root_path=config.ROOTPATH
 )
+
+@app.on_event("startup")
+async def startup():
+    await init_redis()
 
 @app.exception_handler(Exception)
 def global_exception_handler(request: Request, exc: Exception):
@@ -39,5 +44,5 @@ def global_exception_handler(request: Request, exc: Exception):
 
 
 logger.info("Attaching routers...")
-app.include_router(mealplan.router, prefix="/mealplan")
-app.include_router(shoppinglist.router, prefix="/shoppinglist")
+app.include_router(mealplan.router, prefix="/mealplans")
+app.include_router(shoppinglist.router, prefix="/shoppinglists")

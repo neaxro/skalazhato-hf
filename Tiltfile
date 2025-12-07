@@ -35,7 +35,10 @@ k8s_resource(
 helm_resource(
     name='redis',
     chart='oci://registry-1.docker.io/cloudpirates/redis',
-    namespace='redis'
+    namespace='redis',
+    flags=[
+        "--set", "auth.enabled=False",
+    ]
 )
 
 k8s_resource(

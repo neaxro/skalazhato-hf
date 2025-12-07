@@ -1,7 +1,6 @@
 import logging
 from typing import List, Optional
 from fastapi import APIRouter
-from app.service.recipes import recipeService
 from app.models.models import RecipeBase, RecipeRead, RecipeCreate, RecipeWithIngredients
 from pydantic import BaseModel 
 

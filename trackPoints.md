@@ -6,23 +6,23 @@ Jegy 	Pont
 3 	    54-66
 
 - [X] BASE;24
-- [] LANG2;5
-- [] NOERR;5
-- [] CACHE;5
+- [] LANG2;5            TODO: KIVENNI A CSV-BOL!
+- [X] NOERR;5
+- [X] CACHE;5
 - [X] HELM;10
 - [X] K8SJOB;5
 - [X] K8SCRONJOB;5      TODO: HOZZAADNI A CSV-HEZ!
 - [X] K8SCMAP;5
 - [X] K8SSECRET;3
 - [X] K8SNS;7
-- [] CICD;10
+- [] CICD;10            TODO: KIVENNI A CSV-BOL!
 - [X] GW;5-10
 - [X] CONTRIB;2
 - [X] OPSTR;3
 - [X] HSC;5
 - [] Sum;86
 
-24+10+3*5+3+7+5+2+3+5=74
+24+10+3*5+3+7+5+2+3+5+5+5=84
 
 {OPSTR} Tartós tár, pl. lokális mappa csatolása klaszterbe. 3 pont
 

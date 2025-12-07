@@ -1,3 +1,6 @@
 fastapi
 uvicorn[standard]
 psycopg2
+redis[asyncio]
+httpx>=0.25.0
+tenacity>=8.2.0

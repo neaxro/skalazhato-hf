@@ -53,3 +53,23 @@ spec:
                 configMapKeyRef:
                   name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-service
                   key: rootPath
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-service
+                  key: redisHost
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-service
+                  key: redisPort
+            - name: RECIPE_SERVICE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-service
+                  key: recipeServiceHost
+            - name: RECIPE_SERVICE_NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-mealplan-service
+                  key: recipeServiceNamespace

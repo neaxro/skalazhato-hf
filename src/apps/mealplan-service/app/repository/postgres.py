@@ -337,3 +337,41 @@ class PostgresRepository:
         except Exception as e:
             logger.error("DB delete error: %s", e)
             raise
+
+    def get_mealplan(self, id: int) -> MealplanRead:
+        query = """
+            SELECT * FROM mealplans
+            WHERE id = %s
+        """
+        params = (id,)
+        try:
+            with self.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(query, params)
+                    result = cur.fetchone()
+                    if not result:
+                        raise ValueError(f"Mealplan with id={id} not found")
+                    return MealplanRead(**result)
+        except Exception as e:
+            logger.error("DB query error: %s", e)
+            raise
+
+    def get_mealplan_recipes(self, mealplan_id: int) -> List[MealplanRecipeRead]:
+        query = """
+            SELECT * FROM mealplan_recipes
+            WHERE mealplan_id = %s
+        """
+        params = (mealplan_id,)
+        try:
+            with self.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(query, params)
+                    result = cur.fetchall()
+                    if not result:
+                        raise ValueError(f"Recipes for mealplan with id={mealplan_id} not found")
+                    
+        except Exception as e:
+            logger.error("DB query error: %s", e)
+            raise
+
+        return [MealplanRecipeRead(**mr) for mr in result]

@@ -14,6 +14,9 @@ common:
       database: mealplanner
       host: postgresql.postgresql.svc.cluster.local
       port: 5432
+    redis:
+      host: redis.redis.svc.cluster.local
+      port: 6379
 
 recipeService:
   replicaCount: 1
