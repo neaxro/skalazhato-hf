@@ -48,3 +48,8 @@ spec:
                 configMapKeyRef:
                   name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service
                   key: logLevel
+            - name: ROOTPATH
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Chart.Name }}-{{ .Release.Name }}-recipe-service
+                  key: rootPath

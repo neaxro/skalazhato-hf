@@ -4,7 +4,8 @@ from typing import Union
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 from app.routes import recipes, ingredients
-from pydantic import BaseModel 
+from pydantic import BaseModel
+from app.utils.config import config
 
 class ErrorResponse(BaseModel):
     msg: str = "Error occured."
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 logger.info("Starting up backend...")
 app = FastAPI(
     title="MealPlanner API",
+    root_path=config.ROOTPATH
 )
 
 @app.exception_handler(Exception)

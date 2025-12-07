@@ -5,3 +5,4 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   logLevel: {{ .Values.recipeService.env.logLevel | quote }}
+  rootPath: {{ .Values.common.ingress.paths.recipeService }}
