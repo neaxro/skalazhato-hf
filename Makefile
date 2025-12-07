@@ -48,6 +48,14 @@ helm-uninstall-skalazhato: ## Installs a release.
 	helm uninstall $(SKALAZHATO_RELEASE_NAME) \
 		-n $(SKALAZHATO_RELEASE_NS) \
 
-.PHONY: load
-load: ## Creates huge traffic on backend to test HPA.
-	bash src/infra/skalazhato/traffic-load.sh
+.PHONY: load-recipe
+load-recipe: ## Creates huge traffic on recipe backend to test HPA.
+	bash src/infra/skalazhato/traffic-load-recipe.sh
+
+.PHONY: load-mealplan
+load-mealplan: ## Creates huge traffic on mealplan backend to test HPA.
+	bash src/infra/skalazhato/traffic-load-mealplan.sh
+
+.PHONY: k8s-job
+k8s-job: ## Deploys a job for listing Postgresql db content.
+	kubectl apply -f src/infra/postgres/job/job.yaml

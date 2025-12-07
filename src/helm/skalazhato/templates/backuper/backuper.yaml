@@ -4,7 +4,7 @@ metadata:
   name: {{ .Chart.Name }}-{{ .Release.Name }}-backuper
   namespace: {{ .Release.Namespace }}
 spec:
-  schedule: "* * * * *"
+  schedule: {{ .Values.backuper.schedule | quote }}
   jobTemplate:
     spec:
       template:

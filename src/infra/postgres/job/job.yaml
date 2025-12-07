@@ -7,7 +7,7 @@ spec:
   template:
     spec:
       containers:
-        - name: pi
+        - name: showall
           image: "postgres:18"
           command: ["/bin/sh", "/scripts/showall.sh"]
           env:
