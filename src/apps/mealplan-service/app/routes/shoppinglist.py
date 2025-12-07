@@ -1,15 +1,14 @@
 import logging
-from typing import List, Optional
 from fastapi import APIRouter
-from app.models.models import RecipeBase, RecipeRead, RecipeCreate, RecipeWithIngredients
-from pydantic import BaseModel 
+from app.service.mealplan import mealplanService
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
 @router.get(
-    "",
+    "/{plan_id}",
 )
-def get(id: Optional[int] = None):
-    return {'Hello': 'shoppinglist!'}
+async def get(plan_id: int):
+    shoppingList = await mealplanService.createShoppingList(plan_id)
+    return shoppingList

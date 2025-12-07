@@ -9,7 +9,8 @@ from app.models.models import (
     RecipeIngredient,
     DTOMealplanCreate,
     MealplanCreate,
-    MealplanRecipeCreate
+    MealplanRecipeCreate,
+    MealplanRecipeRead
 )
 from app.service.redis import get_cache, set_cache
 from app.utils.config import config
@@ -88,5 +89,36 @@ class MealplanService():
             self.repository.create_mealplan_recipe(data)
         
         return mealplan_id
+
+    async def shoppingListItemsForRecipe(self, recipe: MealplanRecipeRead) -> List[RecipeIngredient]:
+        recipe_data = await self.recipeRepository.get_recipe_with_ingredients(recipe.recipe_id)
+        ingredients: List[RecipeIngredient] = recipe_data.ingredients
+
+        aggregated = {}
+        for ing in ingredients:
+            if ing.id in aggregated:
+                aggregated[ing.id].quantity += ing.quantity
+            else:
+                aggregated[ing.id] = RecipeIngredient(
+                    id=ing.id,
+                    name=ing.name,
+                    unit=ing.unit,
+                    quantity=ing.quantity
+                )
+        return list(aggregated.values())
+
+    async def createShoppingList(self, mealplan_id: int) -> List[RecipeIngredient]:
+        mealplan_recipes: List[MealplanRecipeRead] = self.repository.get_mealplan_recipes(mealplan_id)
+
+        aggregated_items: dict[int, RecipeIngredient] = {}
+        for recipe in mealplan_recipes:
+            items = await self.shoppingListItemsForRecipe(recipe)
+            for item in items:
+                if item.id in aggregated_items:
+                    aggregated_items[item.id].quantity += item.quantity
+                else:
+                    aggregated_items[item.id] = item
+
+        return list(aggregated_items.values())
 
 mealplanService = MealplanService()
