@@ -1,7 +1,11 @@
 import logging
 from typing import List, Optional
 from fastapi import APIRouter
-from app.models.models import MealplanRead, MealplanReadWithRecipes
+from app.models.models import (
+    MealplanRead,
+    MealplanReadWithRecipes,
+    DTOMealplanCreate
+)
 from pydantic import BaseModel 
 from app.service.mealplan import mealplanService
 
@@ -9,6 +13,9 @@ from app.repository.recipe import RecipeServiceRepository
 
 logger = logging.getLogger(__name__)
 
+class MealplanCreatedMessage(BaseModel):
+    msg: str
+    mealplan_id: int
 class MealplanReturnMessage(BaseModel):
     msg: str
     mealplan: MealplanRead
@@ -39,4 +46,16 @@ async def get_with_recipes(id: int):
     return MealplanReturnMessage(
         msg="Mealplan successfuly fetched.",
         mealplan=result
+    )
+
+@router.post(
+    "",
+    response_model=MealplanCreatedMessage,
+    status_code=201
+)
+async def create(mealplan: DTOMealplanCreate):
+    id = await mealplanService.createMealplan(mealplan)
+    return MealplanCreatedMessage(
+        msg="Mealplan successfuly created.",
+        mealplan_id=id
     )

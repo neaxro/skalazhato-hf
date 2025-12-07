@@ -375,3 +375,43 @@ class PostgresRepository:
             raise
 
         return [MealplanRecipeRead(**mr) for mr in result]
+    
+    def create_mealplan(self, mealplan: MealplanCreate) -> int:
+        query = """
+            INSERT INTO mealplans (user_id, week_start)
+            VALUES (%s, %s)
+            RETURNING id
+        """
+        params = (mealplan.user_id, mealplan.week_start)
+
+        try:
+            with self.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(query, params)
+                    id = cur.fetchone()["id"]
+                    conn.commit()
+                    logger.debug(f'Inserted mealplan id={id}!')
+                    return id
+        except Exception as e:
+            logger.error("DB insert error: %s", e)
+            raise
+    
+    def create_mealplan_recipe(self, mealplanRecipe: MealplanRecipeCreate) -> int:
+        query = """
+            INSERT INTO mealplan_recipes (mealplan_id, recipe_id, day_of_week)
+            VALUES (%s, %s, %s)
+            RETURNING id
+        """
+        params = (mealplanRecipe.mealplan_id, mealplanRecipe.recipe_id, mealplanRecipe.day_of_week)
+
+        try:
+            with self.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(query, params)
+                    id = cur.fetchone()["id"]
+                    conn.commit()
+                    logger.debug(f'Inserted recipe for mealplan!')
+                    return id
+        except Exception as e:
+            logger.error("DB insert error: %s", e)
+            raise

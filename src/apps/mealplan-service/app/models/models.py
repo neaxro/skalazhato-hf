@@ -50,15 +50,15 @@ class MealplanBase(BaseModel):
     user_id: Optional[int] = None
     week_start: date
 
-class MealplanCreate(MealplanBase):
-    recipes: List[RecipeRead]
-
 class MealplanRead(MealplanBase):
     id: int
     created_at: datetime
 
     class Config:
         from_attributes = True
+
+class MealplanCreate(MealplanBase):
+    pass
 
 class MealplanRecipeBase(BaseModel):
     mealplan_id: int
@@ -80,8 +80,14 @@ class RecipeIngredient(IngredientRead):
 class RecipeWithIngredients(RecipeRead):
     ingredients: List[RecipeIngredient]
 
-class MealRecipeWithIngredients(MealplanRecipeRead):
-    ingredients: List[RecipeIngredient]
-
 class MealplanReadWithRecipes(MealplanRead):
-    recipes: List[MealRecipeWithIngredients]
+    recipes: List[RecipeWithIngredients]
+
+# DTOs
+
+class MealplanCreateRecipeItem(BaseModel):
+    recipe_id: int
+    day_of_week: conint(ge=0, le=6)
+
+class DTOMealplanCreate(MealplanBase):
+    recipes: List[MealplanCreateRecipeItem]
