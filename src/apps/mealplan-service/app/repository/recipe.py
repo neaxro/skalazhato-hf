@@ -7,6 +7,8 @@ from tenacity import (
     retry_if_exception_type
 )
 from app.models.models import RecipeWithIngredients, RecipeRead
+from app.service.redis import get_cache, set_cache
+
 
 class RecipeServiceRepository:
     def __init__(self, host: str, namespace: str = "default"):
@@ -21,6 +23,12 @@ class RecipeServiceRepository:
 
     @retry_policy
     async def get_recipe_with_ingredients(self, recipe_id: int) -> RecipeWithIngredients:
+        cache_key = f"recipe_with_ingredients:{recipe_id}"
+
+        cached = await get_cache(cache_key, RecipeWithIngredients)
+        if cached:
+            return cached
+        
         url = f"{self.base_url}/recipes/{recipe_id}/ingredients"
         async with httpx.AsyncClient(timeout=5) as client:
             response = await client.get(url)
@@ -31,10 +39,19 @@ class RecipeServiceRepository:
         if not recipe_data:
             raise Exception(f"No 'recipe' found in response for id {recipe_id}")
 
-        return RecipeWithIngredients(**recipe_data)
+        recipe = RecipeWithIngredients(**recipe_data)
+        await set_cache(cache_key, recipe)
+        
+        return recipe
 
     @retry_policy
     async def get_recipe(self, recipe_id: int) -> Union[RecipeRead, None]:
+        cache_key = f"recipe:{recipe_id}"
+
+        cached = await get_cache(cache_key, RecipeWithIngredients)
+        if cached:
+            return cached
+        
         url = f"{self.base_url}/recipe/recipes"
         params = {"id": recipe_id}
 
@@ -45,6 +62,8 @@ class RecipeServiceRepository:
 
         recipes = data.get("recipes", [])
         if recipes:
-            return RecipeRead(**recipes[0])
+            recipe = RecipeRead(**recipes[0])
+            await set_cache(cache_key, recipe)
+            return recipe
 
         return None
